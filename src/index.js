@@ -20,14 +20,23 @@ const app = initializeApp(firebaseConfig);
 
 function writeUserData(studentId, name, imageUrl) {
   const db = getDatabase(app);
-  const reference = ref(db, 'students/' + studentId)
+db.ref('/students').push({
 
-  set(reference, {
       name: name,
       profile_picture: imageUrl
   });
 }
 
-writeUserData('1','Lewis','-')
+// writeUserData('1','Lewis','-')
 
 console.log('hello')
+
+let submitButton = document.getElementById("send");
+
+submitButton.addEventListener("click", (e) => {
+  //Prevent Default Form Submission Behavior
+  e.preventDefault();
+let firstName = document.getElementById("fname").value;
+console.log(firstName)
+writeUserData('',firstName,'-')
+})
