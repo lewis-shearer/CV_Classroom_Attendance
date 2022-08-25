@@ -31,12 +31,13 @@ submitButton.addEventListener("click", (e) => {
 
   // Get the value of the name field in the form
   let fname = document.getElementById("fname").value;
-  
+  let lname = document.getElementById("lname").value;
+
   // Print the name in the console, for testing purposes
   console.log(fname);
 
-  // Call to the function writeStudentData, passing two parameters: name and the value for the profile picture (which is not being used at th emoment)
-  writeStudentData(fname,'image_url');
+  // Call to the function writeStudentData, passing two parameters: first and last name
+  writeStudentData(fname, lname);
 
 })
 
@@ -45,8 +46,8 @@ submitButton.addEventListener("click", (e) => {
 
 
 // Write the student data that comes from the html form
-// We are using two parameters: name and the profile picture (which is not being used at the moment)
-function writeStudentData(fname, imageUrl) {
+// We are using two parameters: first name and last name
+function writeStudentData(fname, lname) {
 
   // Get the database from our firebase app
   const db = getDatabase(app);
@@ -56,8 +57,8 @@ function writeStudentData(fname, imageUrl) {
 
   // Push the data from the html form to the reference to the student list (see step below)
   push(reference, {
-      name: fname,
-      profile_picture: imageUrl
+      firstName: fname,
+      lastName: lname,
   });
 
 }
