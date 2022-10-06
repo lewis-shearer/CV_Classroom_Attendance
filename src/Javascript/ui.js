@@ -5,6 +5,7 @@ const loginButton = document.getElementById("login-form-submit");
 const loginErrorMsg = document.getElementById("login-error-msg");
 
 // When the login button is clicked, the following code is executed
+if (loginButton != null) {
 loginButton.addEventListener("click", (e) => {
     // Prevent the default submission of the form
     e.preventDefault();
@@ -21,7 +22,7 @@ loginButton.addEventListener("click", (e) => {
         // Otherwise, make the login error message show (change its oppacity)
         loginErrorMsg.style.opacity = 1;
         }
-})
+})}
 
 
 

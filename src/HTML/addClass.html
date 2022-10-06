@@ -20,15 +20,47 @@
       <a href="settings.html"><img class="sidebar-icon" src="../Images/settings.png" >  Settings</a><br>
     </div>
     <div class="main-body">
-      <h3>Enter New Classes Information</h3>
+      <h4>Enter New Classes Information</h4>
+      <br><br>
       <form id="newClass">
-        <label for="cname">Class name:</label>
-        <input type="text" id="cname" name="cname">
-        <label for="teacher">Teacher:</label>
-        <input type="text" id="teacher" name="teacher"><br><br>
-        <label for="modelURL">Machine Learning Model Url:</label>
-        <input type="text" id="modelURL" name="modelURL">
-        <input id="sendClass" type="submit" value="Submit">
+        <label for="cgroup" class="feilds">Class group:</label>
+        <input type="text" id="cgroup" name="cgroup"><br><br><br>
+        <label for="csubject" class="feilds">Class Subject:</label>
+        <select id="csubject" name="csubject">
+          <option value="please select">Please Select</option>
+          <option value="maths">Maths</option>
+          <option value="english">English</option>
+          <option value="french">French</option>
+          <option value="drama">Drama</option>
+          <option value="history">History</option>
+          <option value="pe">PE</option>
+          <option value="pshe">PSHE</option>
+          <option value="rme">RME</option>
+          <option value="geography">Geography</option>
+          <option value="science">Science</option>
+          <option value="art and design">Art And Design</option>
+          <option value="music">Music</option>
+          <option value="design and technology">Design And Technology</option>
+          <option value="design and manufacture">Design And Manufacture</option>
+          <option value="spanish">Spanish</option>
+          <option value="mandarin">Mandarin</option>
+          <option value="business">Business</option>
+          <option value="computing">Computing</option>
+          <option value="biology">Biology</option>
+          <option value="chemistry">Chemistry</option>
+          <option value="phsyics">Phsyics</option>
+        </select><br><br><br>
+        <label for="teacher" class="feilds">Teacher:</label>
+        <input type="text" id="teacher" name="teacher"><br><br><br>
+        <label for="room" class="feilds">Room:</label>
+        <input type="text" id="room" name="room"><br><br><br>
+        <label for="modelURL" class="feilds">Machine Learning Model Url:</label>
+        <input type="url" id="modelURL" name="modelURL"><br><br><br>
+        <label for="cID" class="feilds">Class ID:</label>
+        <input type="text" id="classID" name="cID"><br><br><br><br><br>
+        <input id="sendClass" type="submit" value="Submit"class="submitButton">
+        <input id="updateClass" type="submit" value="Update" class="submitButton">
+        <input id="removeClass" type="submit" value="Delete" class="submitButton">
         </form>
     </div>
     <div class="right-side">

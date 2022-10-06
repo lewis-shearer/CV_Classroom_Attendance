@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js';
-import { getDatabase, ref, push, onValue } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js';
+import { getDatabase, set, get, update, remove, ref, push, onValue, child } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js';
 // Initialize the FirebaseUI Widget using Firebase.
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -26,6 +26,9 @@ const db = getDatabase(app);
 
 // Get reference to the submit button which id = "send"
 let submitButton = document.getElementById("sendPupil");
+
+
+let deletePupil = document.getElementById("deletePupil");
 
 // Add an event listener, which will work when the submit button is clicked
 if (submitButton != null) {
@@ -61,16 +64,16 @@ function writeStudentData(fname, lname, sID, age, gender, sEmail) {
 
 
   // Get a reference to the student list on our firebase realtime database
-  const reference = ref(db, '/students');
+  const reference = ref(db, '/students/' + sID);
 
   // Push the data from the html form to the reference to the student list (see step below)
-  push(reference, {
-      firstName: fname,
-      lastName: lname,
-      studentID: sID,
-      age: age,
-      gender: gender,
-      schoolEmail: sEmail,
+  set(reference, {
+      FirstName: fname,
+      LastName: lname,
+      StudentID: sID,
+      Age: age,
+      Gender: gender,
+      SchoolEmail: sEmail,
   });
 
 }
@@ -110,19 +113,21 @@ function writeTeacherData(fnameT, lnameT, sIDT, subjectT, genderT, sEmailT) {
 
 
   // Get a reference to the student list on our firebase realtime database
-  const reference1 = ref(db, '/teachers');
+  const reference1 = ref(db, '/teachers/' + sIDT);
 
   // Push the data from the html form to the reference to the student list (see step below)
-  push(reference1, {
-      firstName: fnameT,
-      lastName: lnameT,
-      studentID: sIDT,
-      subject: subjectT,
-      gender: genderT,
-      schoolEmail: sEmailT,
+  set(reference1, {
+      FirstName: fnameT,
+      LastName: lnameT,
+      TeacherID: sIDT,
+      Subject: subjectT,
+      Gender: genderT,
+      SchoolEmail: sEmailT,
   });}
 
 //************************************ */ Adding Class
+
+
 
 
 // Get reference to the submit button which id = "send"
@@ -136,25 +141,29 @@ submitButton2.addEventListener("click", (e) => {
   e.preventDefault();
   console.log("Test");
   // Get the value of the name field in the form
-  let cname = document.getElementById("cname").value;
+  let cgroup = document.getElementById("cgroup").value;
+  let csubject = document.getElementById("csubject").value;
   let teacher = document.getElementById("teacher").value;
+  let room = document.getElementById("room").value;
   let modelURL = document.getElementById("modelURL").value;
-  
+  let cID = document.getElementById("classID").value;
+
   // Print the name in the console, for testing purposes
-  console.log(cname);
+  console.log(classID);
 
   // Call to the function writeStudentData, passing two parameters: first and last name
-  writeClassData(cname, teacher, modelURL);
+  writeClassData(cgroup, csubject, teacher, room, modelURL, cID);
 
 })}
 
 // Write the student data that comes from the html form
 // We are using two parameters: first name and last name
-function writeClassData(cname, teacher, modelURL) {
+function writeClassData(cgroup, csubject, teacher, room, modelURL, cID) {
 
 
   // Get a reference to the student list on our firebase realtime database
-  const reference2 = ref(db, '/classes');
+  
+const reference2 = ref(db, '/classes/' + cID);
   onValue(reference2, (snapshot) => {
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
@@ -168,14 +177,158 @@ function writeClassData(cname, teacher, modelURL) {
 
 
   // Push the data from the html form to the reference to the student list (see step below)
-  push(reference2, {
-      ClassName: cname,
+  set(reference2, {
+      ClassGroup: cgroup,
+      ClassSubject: csubject,
       TeacherName: teacher,
+      Room: room,
       machineLearningModelURL: modelURL,
+      ClassID: cID,
   });}
 
+//******************************************Finding student */
+
+let findFName = document.getElementById("findFName");
+let findLName = document.getElementById("findLName");
+let findSID = document.getElementById("findSID");  
+let findAge = document.getElementById("findAge");
+let findSubject = document.getElementById("findSubject");
+let findGender = document.getElementById("findGender");
+let findSEmail = document.getElementById("findSEmail");
+let findBtn = document.getElementById("findBtn");
+let findPupil = document.getElementById("findPupil");
+let findcsubject = document.getElementById("findcsubject");
+let findcgroup = document.getElementById("findcgroup");
+let findcteacher = document.getElementById("findcteacher");
+let findcroom = document.getElementById("findcroom");
+let findcmodelurl = document.getElementById("findcmodelurl");
+let findcid = document.getElementById("findcid");
+
+if (findBtn != null) {
+findBtn.addEventListener('click', FindPData)
 
 
+function FindPData() {
+  const dbref = ref(db);
+
+  get(child(dbref, "/students/" + findPupil.value))
+  .then((snapshot) => {
+     if (snapshot.exists()) {
+      findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
+      findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
+      findSID.innerHTML = "Student ID: " + snapshot.val().StudentID;
+      findAge.innerHTML = "Age: " + snapshot.val().Age;
+      findGender.innerHTML = "Gender: " + snapshot.val().Gender;
+      findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
+     }
+
+  })
+}}
+
+//******************************************Finding teachers */
+
+if (findBtn != null) {
+  findBtn.addEventListener('click', FindTData)
+  
+  
+  function FindTData() {
+    const dbref = ref(db);
+  
+    get(child(dbref, "/teachers/" + findPupil.value))
+    .then((snapshot) => {
+       if (snapshot.exists()) {
+        findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
+        findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
+        findSID.innerHTML = "Student ID: " + snapshot.val().TeacherID;
+        findSubject.innerHTML = "Subject : " + snapshot.val().Subject;
+        findGender.innerHTML = "Gender: " + snapshot.val().Gender;
+        findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
+       } 
+  
+    })
+  }}
+
+//******************************************Finding classes */
+
+if (findBtn != null) {
+  findBtn.addEventListener('click', FindCData)
+  
+  
+  function FindCData() {
+    const dbref = ref(db);
+  
+    get(child(dbref, "/classes/" + findPupil.value))
+    .then((snapshot) => {
+       if (snapshot.exists()) {
+        findcgroup.innerHTML = "Group : " + snapshot.val().ClassGroup;
+        findcsubject.innerHTML = "Subject : " + snapshot.val().ClassSubject;
+        findcteacher.innerHTML = "Teacher : " + snapshot.val().TeacherName;
+        findcroom.innerHTML = "Room : " + snapshot.val().Room;
+        findcmodelurl.innerHTML = "Model URL : " + snapshot.val().machineLearningModelURL;
+        findcid.innerHTML = "Class ID : " + snapshot.val().ClassID;
+       } 
+  
+    })
+  }}
+
+//********************************************Updating Students */
+
+    let fname = document.getElementById("fname").value;
+    let lname = document.getElementById("lname").value;
+    let sID = document.getElementById("sID").value;
+    let age = document.getElementById("age").value;
+    let gender = document.getElementById("gender").value;
+    let sEmail = document.getElementById("sEmail").value;
+
+
+const updatePupil = document.getElementById("updatePupil"); 
+
+if (updatePupil != null) {
+  updatePupil.addEventListener('click', updatePupil1)
+  
+  function updatePupil1() {
+
+    
+    
+    update(ref(db, "/students/"+ sID),{
+      FirstName: fname.value,
+      LastName: lname.value,
+      StudentID: sID.value,
+      Age: age.value,
+      Gender: gender.value,
+      SchoolEmail: sEmail.value,
+  })
+  
+}
+  
+
+  }
+
+
+
+  //************************************Delete Pupil */
+
+ 
+  let removePupilBTN = document.getElementById("removePupil").value;
+
+  if (removePupilBTN != null) {
+
+    
+    removePupilBTN.addEventListener('click', removePupil1)
+    
+    function removePupil1() {
+  remove(ref(db, "/students/" + sID.value))
+
+  .then(()=>{
+    alert("Data Removed");
+  })
+      
+
+    
+  }
+    
+  
+    }
 
 
 

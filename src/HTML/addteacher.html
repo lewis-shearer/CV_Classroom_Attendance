@@ -20,15 +20,16 @@
       <a href="settings.html"><img class="sidebar-icon" src="../Images/settings.png" >  Settings</a><br>
     </div>
     <div class="main-body">
-    <h3>Enter New Teachers Information</h3>
+    <h4>Enter New Teachers Information</h4>
+    <br><br><br>
       <form id="newStudent">
-        <label for="fnameT">First name:</label>
-        <input type="text" id="fnameT" name="fnameT">
-        <label for="lnameT">Last Name:</label>
-        <input type="text" id="lnameT" name="lnameT"><br><br>
-        <label for="sIDT">Teacher ID:</label>
-        <input type="number" id="sIDT" name="sIDT"><br><br>
-        <label for="SubjectT">Subject:</label>
+        <label for="fnameT" class="feilds">First name:</label>
+        <input type="text" id="fnameT" name="fnameT"><br><br><br>
+        <label for="lnameT" class="feilds">Last Name:</label>
+        <input type="text" id="lnameT" name="lnameT"><br><br><br>
+        <label for="sIDT" class="feilds">Teacher ID:</label>
+        <input type="text" id="sIDT" name="sIDT"><br><br><br>
+        <label for="SubjectT" class="feilds">Subject:</label>
         <select id="subjectT" name="subjectT">
           <option value="please select">Please Select</option>
           <option value="maths">Maths</option>
@@ -52,17 +53,19 @@
           <option value="biology">Biology</option>
           <option value="chemistry">Chemistry</option>
           <option value="phsyics">Phsyics</option>
-        </select><br><br>
-        <label for="genderT">Gender:</label>
+        </select><br><br><br>
+        <label for="genderT" class="feilds">Gender:</label>
         <select id="genderT" name="genderT">
           <option value="please select">Please Select</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
           <option value="Prefer not to say">Prefer not to say</option>
-        </select><br><br>
-        <label for="sEmail">Email (School):</label>
-        <input type="email" id="sEmailT" name="sEmailT"><br><br>
-        <input id="sendTeacher" type="submit" value="Submit">
+        </select><br><br><br>
+        <label for="sEmail" class="feilds">Email (School):</label>
+        <input type="email" id="sEmailT" name="sEmailT"><br><br><br><br>
+        <input id="sendTeacher" type="submit" value="Submit" class="submitButton">
+        <input id="updateTeacher" type="submit" value="Update" class="submitButton">
+        <input id="removeTeacher" type="submit" value="Delete" class="submitButton">
       </form>
 
       
