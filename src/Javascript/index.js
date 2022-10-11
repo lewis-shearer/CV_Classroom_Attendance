@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js';
-import { getDatabase, set, get, update, remove, ref, push, onValue, child } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js';
+import { getDatabase, set, get, update, remove, ref, push, onValue, child, query } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js';
 // Initialize the FirebaseUI Widget using Firebase.
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,7 +28,6 @@ const db = getDatabase(app);
 let submitButton = document.getElementById("sendPupil");
 
 
-let deletePupil = document.getElementById("deletePupil");
 
 // Add an event listener, which will work when the submit button is clicked
 if (submitButton != null) {
@@ -64,7 +63,7 @@ function writeStudentData(fname, lname, sID, age, gender, sEmail) {
 
 
   // Get a reference to the student list on our firebase realtime database
-  const reference = ref(db, '/students/' + sID);
+  const reference = ref(db, '/students/');
 
   // Push the data from the html form to the reference to the student list (see step below)
   set(reference, {
@@ -163,7 +162,7 @@ function writeClassData(cgroup, csubject, teacher, room, modelURL, cID) {
 
   // Get a reference to the student list on our firebase realtime database
   
-const reference2 = ref(db, '/classes/' + cID);
+const reference2 = ref(db, '/classes');
   onValue(reference2, (snapshot) => {
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
@@ -204,31 +203,77 @@ let findcroom = document.getElementById("findcroom");
 let findcmodelurl = document.getElementById("findcmodelurl");
 let findcid = document.getElementById("findcid");
 
+// if (findBtn != null) {
+// findBtn.addEventListener('click', FindPData())
+
+
+
+
+
 if (findBtn != null) {
-findBtn.addEventListener('click', FindPData)
+  findBtn.addEventListener("click", (e) => {
+    console.log("test")
+    const dbref = ref(db, '/students/');
+  
+    // get(child(dbref, "/students/" + findPupil.value))
+    // .then((snapshot) => {
+    //    if (snapshot.exists()) {
+    //     findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
+    //     findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
+    //     findSID.innerHTML = "Student ID: " + snapshot.val().StudentID;
+    //     findAge.innerHTML = "Age: " + snapshot.val().Age;
+    //     findGender.innerHTML = "Gender: " + snapshot.val().Gender;
+    //     findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
+    //    }
+  
+    // })
+  
+    const studentsRef = query(dbref);
+  
+    get(studentsRef).then((snapshot) => {
+      snapshot.forEach((child) => {
+        console.log(child.key, child.val().uid);
+      });
+    }).catch((error) => {
+      console.error(error);
+    });
+   
+  })}
 
 
-function FindPData() {
-  const dbref = ref(db);
 
-  get(child(dbref, "/students/" + findPupil.value))
-  .then((snapshot) => {
-     if (snapshot.exists()) {
-      findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
-      findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
-      findSID.innerHTML = "Student ID: " + snapshot.val().StudentID;
-      findAge.innerHTML = "Age: " + snapshot.val().Age;
-      findGender.innerHTML = "Gender: " + snapshot.val().Gender;
-      findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
-     }
+// function FindPData() {
+//   console.log("test")
+//   const dbref = ref(db, '/students/');
 
-  })
-}}
+//   // get(child(dbref, "/students/" + findPupil.value))
+//   // .then((snapshot) => {
+//   //    if (snapshot.exists()) {
+//   //     findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
+//   //     findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
+//   //     findSID.innerHTML = "Student ID: " + snapshot.val().StudentID;
+//   //     findAge.innerHTML = "Age: " + snapshot.val().Age;
+//   //     findGender.innerHTML = "Gender: " + snapshot.val().Gender;
+//   //     findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
+//   //    }
+
+//   // })
+
+//   const studentsRef = query(dbref);
+
+//   get(studentsRef).then((snapshot) => {
+//     snapshot.forEach((child) => {
+//       console.log(child.key, child.val().uid);
+//     });
+//   }).catch((error) => {
+//     console.error(error);
+//   });
+// }}
 
 //******************************************Finding teachers */
 
 if (findBtn != null) {
-  findBtn.addEventListener('click', FindTData)
+  findBtn.addEventListener('click', FindTData())
   
   
   function FindTData() {
@@ -251,7 +296,7 @@ if (findBtn != null) {
 //******************************************Finding classes */
 
 if (findBtn != null) {
-  findBtn.addEventListener('click', FindCData)
+  findBtn.addEventListener('click', FindCData())
   
   
   function FindCData() {
@@ -273,18 +318,18 @@ if (findBtn != null) {
 
 //********************************************Updating Students */
 
-    let fname = document.getElementById("fname").value;
-    let lname = document.getElementById("lname").value;
-    let sID = document.getElementById("sID").value;
-    let age = document.getElementById("age").value;
-    let gender = document.getElementById("gender").value;
-    let sEmail = document.getElementById("sEmail").value;
+    // let fname = document.getElementById("fname").value;
+    // let lname = document.getElementById("lname").value;
+    // let sID = document.getElementById("sID").value;
+    // let age = document.getElementById("age").value;
+    // let gender = document.getElementById("gender").value;
+    // let sEmail = document.getElementById("sEmail").value;
 
 
 const updatePupil = document.getElementById("updatePupil"); 
 
 if (updatePupil != null) {
-  updatePupil.addEventListener('click', updatePupil1)
+  updatePupil.addEventListener('click', updatePupil1())
   
   function updatePupil1() {
 
@@ -309,26 +354,26 @@ if (updatePupil != null) {
   //************************************Delete Pupil */
 
  
-  let removePupilBTN = document.getElementById("removePupil").value;
+  // let removePupilBTN = document.getElementById("removePupil").value;
 
-  if (removePupilBTN != null) {
+  // if (removePupilBTN != null) {
 
     
-    removePupilBTN.addEventListener('click', removePupil1)
+  //   removePupilBTN.addEventListener('click', removePupil1())
     
-    function removePupil1() {
-  remove(ref(db, "/students/" + sID.value))
+  //   function removePupil1() {
+  // remove(ref(db, "/students/" + sID.value))
 
-  .then(()=>{
-    alert("Data Removed");
-  })
+  // .then(()=>{
+  //   alert("Data Removed");
+  // })
       
 
     
-  }
+  // }
     
   
-    }
+  //   }
 
 
 
