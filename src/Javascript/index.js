@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-app.js';
-import { getDatabase, set, get, update, remove, ref, push, onValue, child, query } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js';
+import { getDatabase, set, get, update, remove, ref, push, onValue, child, query, limitToFirst, limitToLast, orderByChild, startAt, startAfter, endAt, endBefore, equalTo } from 'https://www.gstatic.com/firebasejs/9.6.4/firebase-database.js';
 // Initialize the FirebaseUI Widget using Firebase.
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,7 +24,7 @@ const db = getDatabase(app);
 
 // ********************* STEP ONE: Process the html form 📋
 
-// Get reference to the submit button which id = "send"
+// Get reference to the submit button which id = "sendPupil"
 let submitButton = document.getElementById("sendPupil");
 
 
@@ -47,7 +47,7 @@ submitButton.addEventListener("click", (e) => {
   // Print the name in the console, for testing purposes
   console.log(fname);
 
-  // Call to the function writeStudentData, passing two parameters: first and last name
+  // Call to the function writeStudentData, passing the six parameters
   writeStudentData(fname, lname, sID, age, gender, sEmail);
 
 })}
@@ -57,15 +57,14 @@ submitButton.addEventListener("click", (e) => {
 
 
 // Write the student data that comes from the html form
-// We are using two parameters: first name and last name
+// We are using six parameters: first name, last name, student ID, age, gender and student email.
 function writeStudentData(fname, lname, sID, age, gender, sEmail) {
 
-console.log("test2")
 
   // Get a reference to the student list on our firebase realtime database
   const reference = ref(db, '/students/' + sID);
 
-  // Push the data from the html form to the reference to the student list (see step below)
+  // Push the data from the html form to the reference to the student list
   set(reference, {
       FirstName: fname,
       LastName: lname,
@@ -189,153 +188,107 @@ const reference2 = ref(db, '/classes/' + cID);
 
 //******************************************Finding student */
 
-let findFName = document.getElementById("findFName");
-let findLName = document.getElementById("findLName");
-let findSID = document.getElementById("findSID");  
-let findAge = document.getElementById("findAge");
-let findSubject = document.getElementById("findSubject");
-let findGender = document.getElementById("findGender");
-let findSEmail = document.getElementById("findSEmail");
-let findBtn = document.getElementById("findBtn");
-let findPupil = document.getElementById("findPupil");
-let findcsubject = document.getElementById("findcsubject");
-let findcgroup = document.getElementById("findcgroup");
-let findcteacher = document.getElementById("findcteacher");
-let findcroom = document.getElementById("findcroom");
-let findcmodelurl = document.getElementById("findcmodelurl");
-let findcid = document.getElementById("findcid");
+// function SelectAllData(){
+//   ref(db, "/students").once("value",
+//   function(AllRecords){
+//     AllRecords.forEach(
+//       function(CurrentRecord){
 
-// if (findBtn != null) {
-// findBtn.addEventListener('click', FindPData())
+//         let fname = document.getElementById("fname").value;
+//         let lname = document.getElementById("lname").value;
+//         let sID = document.getElementById("sID").value;
+//         let age = document.getElementById("age").value;
+//         let gender = document.getElementById("gender").value;
+//         let sEmail = document.getElementById("sEmail").value;
+//         AddItemsToTable(fname, lname, sID, age, gender, sEmail);
+//       }
+//     )
+//   })
+// }
 
+// window.onload = SelectAllData;
 
+var stdNo = 0;
 
+function AddItemsToTable(){
 
+  var tbody = document.getElementById("tbody")
+  var trow = document.createElement("tr")
+  var td1 = document.createElement("td")
+  var td2 = document.createElement("td")
+  var td3 = document.createElement("td")
+  var td4 = document.createElement("td")
+  var td5 = document.createElement("td")
+  var td6 = document.createElement("td")
+  var td7 = document.createElement("td")
 
-if (findBtn != null) {
-  findBtn.addEventListener("click", (e) => {
-    console.log("test")
-    const dbref = ref(db, '/students/');
-  
-    // get(child(dbref, "/students/" + findPupil.value))
-    // .then((snapshot) => {
-    //    if (snapshot.exists()) {
-    //     findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
-    //     findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
-    //     findSID.innerHTML = "Student ID: " + snapshot.val().StudentID;
-    //     findAge.innerHTML = "Age: " + snapshot.val().Age;
-    //     findGender.innerHTML = "Gender: " + snapshot.val().Gender;
-    //     findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
-    //    }
-  
-    // })
-  
-    const studentsRef = query(dbref);
-  
-    get(studentsRef).then((snapshot) => {
-      snapshot.forEach((child) => {
-        console.log(child.key, child.val().uid);
-      });
-    }).catch((error) => {
-      console.error(error);
+  td1.innerHTML= ++stdNo;
+  td2.innerHTML= fname;
+  td3.innerHTML= lname;
+  td4.innerHTML= sID;
+  td5.innerHTML= age;
+  td6.innerHTML= gender;
+  td7.innerHTML= sEmail;
+
+  trow.appendChild(td1);
+  trow.appendChild(td2);
+  trow.appendChild(td3); 
+  trow.appendChild(td4); 
+  trow.appendChild(td5);
+  trow.appendChild(td6);
+  trow.appendChild(td7);
+
+  tbody.appendChild(trow);
+}
+
+function AddAllItemsToTable(Students){
+  stdNo=0;
+  tbody.innerHTML="";
+  Students.forEach(element => {
+    AddItemsToTable(element.Firstname, element.LastName, element.StudentID, element.Age, element.gender, element.SchoolEmail);
+  });
+}
+
+function GetAllDataOnce(){
+  const dbref = ref(db);
+  get(child(dbref, "students"))
+  .then((snapshot)=>{
+    var students = [];
+    console.log(snapshot);
+    snapshot.forEach(childSnapshot => {
+      console.log("test")
+      students.push(childSnapshot.val());
+
     });
-   
-  })}
+    console.log(students)
+AddAllItemsToTable(students);
+  })
+}
 
-
-
-// function FindPData() {
-//   console.log("test")
-const dbref = ref(db, '/students/');
-
-//   // get(child(dbref, "/students/" + findPupil.value))
-//   // .then((snapshot) => {
-//   //    if (snapshot.exists()) {
-//   //     findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
-//   //     findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
-//   //     findSID.innerHTML = "Student ID: " + snapshot.val().StudentID;
-//   //     findAge.innerHTML = "Age: " + snapshot.val().Age;
-//   //     findGender.innerHTML = "Gender: " + snapshot.val().Gender;
-//   //     findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
-//   //    }
-
-//   // })
-
-
-
-const studentsRef = query(dbref);
-
-get(studentsRef).then((snapshot) => {
- snapshot.forEach((child) => {
- console.log(child.key, child.val().uid);
-});
-}).catch((error) => {
-  console.error(error);
- });
-
-//******************************************Finding teachers */
-
-if (findBtn != null) {
-  findBtn.addEventListener('click', (e)=> {
-  
-  
-    const dbref = ref(db);
-  
-    get(child(dbref, "/teachers/" + findPupil.value))
-    .then((snapshot) => {
-       if (snapshot.exists()) {
-        findFName.innerHTML = "First Name: " + snapshot.val().FirstName;
-        findLName.innerHTML = "Last Name: " + snapshot.val().LastName;
-        findSID.innerHTML = "Student ID: " + snapshot.val().TeacherID;
-        findSubject.innerHTML = "Subject : " + snapshot.val().Subject;
-        findGender.innerHTML = "Gender: " + snapshot.val().Gender;
-        findSEmail.innerHTML = "School Email: " + snapshot.val().SchoolEmail;
-       } 
-  
-    })
-  })}
-
-//******************************************Finding classes */
-
-if (findBtn != null) {
-  findBtn.addEventListener('click', (e) => {
-  
-
-    console.log("test1")
-    const dbref = ref(db);
-  
-    get(child(dbref, "/classes/" + findPupil.value))
-    .then((snapshot) => {
-       if (snapshot.exists()) {
-        findcgroup.innerHTML = "Group : " + snapshot.val().ClassGroup;
-        findcsubject.innerHTML = "Subject : " + snapshot.val().ClassSubject;
-        findcteacher.innerHTML = "Teacher : " + snapshot.val().TeacherName;
-        findcroom.innerHTML = "Room : " + snapshot.val().Room;
-        findcmodelurl.innerHTML = "Model URL : " + snapshot.val().machineLearningModelURL;
-        findcid.innerHTML = "Class ID : " + snapshot.val().ClassID;
-       } 
-  
-    })
-  })}
+window.onload = GetAllDataOnce;
 
 //********************************************Updating Students */
 
 
-
+// Get a refrence to the update pupil button with the id="updatePupil"
 const updatePupil = document.getElementById("updatePupil"); 
 
+// Add an event listener that will work when the updatePupil button is clicked
 if (updatePupil != null) {
   updatePupil.addEventListener("click", (e) => {
+
+    // Get a refrence for all the forms feilds
     let fname = document.getElementById("fname").value;
     let lname = document.getElementById("lname").value;
     let sID = document.getElementById("sID").value;
     let age = document.getElementById("age").value;
     let gender = document.getElementById("gender").value;
     let sEmail = document.getElementById("sEmail").value;
-    //Prevent Default Form Submission Behavior
-    console.log(fname)
+
+    // Prevent Default Form Submission Behavior
     e.preventDefault();
 
+    // Update the data from the HTML form to the students list
     update(ref(db, "/students/"+ sID),{
       FirstName: fname,
       LastName: lname,
@@ -437,18 +390,20 @@ updateClass.addEventListener("click", (e) => {
 
     
 
-
+// Get a refrence to the remove pupil button with the ID="removePupil"
   const removePupil = document.getElementById("removePupil"); 
 
+  // Add an event listenter that will work when the remove pupil button is pressed
   if (removePupil != null) {
     removePupil.addEventListener("click", (e) => {
 
-
+// Get a refrence to the student ID feild
       let sID = document.getElementById("sID").value;
-      //Prevent Default Form Submission Behavior
 
+      //Prevent Default Form Submission Behavior
       e.preventDefault();
   
+      // Remove the data from the specified branch
       remove(ref(db, "/students/"+ sID))
   
     .then (()=>{
