@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Add-Pupil</title>
+    <link rel="stylesheet" href="../CSS/styles.css">
+    <script type="module" src="../Javascript/ui.js"></script>
+    <script type="module" src="../Javascript/index.js"></script>
+  </head>
+  <body class="body"><br>
+    <div class="vertical-menu"><br>
+      <h2>Jordanhill School</h2><br>
+      <a href="dashboard.html"><img class="sidebar-icon" src="../Images/home.png" >  Dashboard</a><br>
+      <a href="take-attendance.html"><img class="sidebar-icon" src="../Images/take-attendance.png" >  Take Attendance</a><br>
+      <a href="attendance.html"><img class="sidebar-icon" src="../Images/attendance.png" >  Past Attendance</a><br>
+      <a href="database.html"><img class="sidebar-icon" src="../Images/database-logo.png" >  Database</a><br>
+      <a href="add.html" class="active"><img class="sidebar-icon" src="../Images/add-pupil.png" >  Add Pupil/Teacher</a><br><br><br>
+      <a href="settings.html"><img class="sidebar-icon" src="../Images/settings.png" >  Settings</a><br>
+    </div>
+    <div class="main-body">
+      <h4>Delete Students Information</h4>
+      <form id="Delete Student">
+        <label for="fname" class="feilds">First name:</label>
+        <input type="text" id="fname" name="fname" disabled><br><br><br>
+        <label for="lname" class="feilds">Last Name:</label>
+        <input type="text" id="lname" name="lname" disabled><br><br><br>
+        <label for="sID" class="feilds">Student ID:</label>
+        <input type="text" id="sID" name="sID" disabled><br><br><br>
+        <label for="age" class="feilds">Age:</label>
+        <input type="number" id="age" name="age" disabled><br><br><br>
+        <label for="gender" class="feilds">Gender:</label>
+        <select id="gender" name="gender" disabled>
+          <option value="please select" disabled>Please Select</option>
+          <option value="Male" disabled>Male</option>
+          <option value="Female" disabled>Female</option>
+          <option value="Prefer not to say" disabled>Prefer not to say</option>
+        </select><br><br><br>
+        <label for="sEmail" class="feilds">Email (School):</label>
+        <input type="email" id="sEmail" name="sEmail"disabled><br><br><br><br><br><br>
+        <input id="removePupil" type="submit" value="Delete" >
+
+    </div>
+    <div class="right-side">
+
+      
+    </div>
+  </body>
+</html>

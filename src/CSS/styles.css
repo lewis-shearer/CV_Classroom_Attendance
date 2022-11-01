@@ -116,3 +116,14 @@ text-decoration: none;
 font-family: verdana;}
 
 .submitButton {font-size: x-large;}
+
+table, th, td {
+  width: 100%;
+  margin-top: 25px;
+}
+
+th, td{
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}

@@ -209,8 +209,9 @@ const reference2 = ref(db, '/classes/' + cID);
 // window.onload = SelectAllData;
 
 var stdNo = 0;
+var TNo = 0;
 
-function AddItemsToTable(){
+function AddItemsToTable(fname, lname, sID, age, gender, sEmail){
 
   var tbody = document.getElementById("tbody")
   var trow = document.createElement("tr")
@@ -221,6 +222,7 @@ function AddItemsToTable(){
   var td5 = document.createElement("td")
   var td6 = document.createElement("td")
   var td7 = document.createElement("td")
+  var td8 = document.createElement("td")
 
   td1.innerHTML= ++stdNo;
   td2.innerHTML= fname;
@@ -229,6 +231,7 @@ function AddItemsToTable(){
   td5.innerHTML= age;
   td6.innerHTML= gender;
   td7.innerHTML= sEmail;
+  td8.innerHTML = "<a href='updatePupil.html?sID=" + sID + "&test=123'>Update</a>  <a href='deletePupil.html?sID=" + sID + "&test=123'>Delete</a>";
 
   trow.appendChild(td1);
   trow.appendChild(td2);
@@ -237,15 +240,16 @@ function AddItemsToTable(){
   trow.appendChild(td5);
   trow.appendChild(td6);
   trow.appendChild(td7);
+  trow.appendChild(td8);
 
   tbody.appendChild(trow);
 }
 
-function AddAllItemsToTable(Students){
+function AddAllItemsToTable(students){
   stdNo=0;
   tbody.innerHTML="";
-  Students.forEach(element => {
-    AddItemsToTable(element.Firstname, element.LastName, element.StudentID, element.Age, element.gender, element.SchoolEmail);
+  students.forEach(element => {
+    AddItemsToTable(element.FirstName, element.LastName, element.StudentID, element.Age, element.Gender, element.SchoolEmail);
   });
 }
 
@@ -261,11 +265,14 @@ function GetAllDataOnce(){
 
     });
     console.log(students)
-AddAllItemsToTable(students);
+    AddAllItemsToTable(students);
   })
 }
 
 window.onload = GetAllDataOnce;
+
+
+
 
 //********************************************Updating Students */
 
@@ -273,8 +280,22 @@ window.onload = GetAllDataOnce;
 // Get a refrence to the update pupil button with the id="updatePupil"
 const updatePupil = document.getElementById("updatePupil"); 
 
+const queryString = window.location.search;
+console.log(queryString);
+
+const urlParams = new URLSearchParams(queryString);
+console.log(urlParams)
+
+const sID = urlParams.get('sID')
+console.log(sID);
+
+
+findStudent(sID)
+
+
 // Add an event listener that will work when the updatePupil button is clicked
 if (updatePupil != null) {
+
   updatePupil.addEventListener("click", (e) => {
 
     // Get a refrence for all the forms feilds
@@ -476,3 +497,24 @@ updateClass.addEventListener("click", (e) => {
 
 
 
+function findStudent(sID){
+  const updateP = ref(db, '/students/' + sID);
+
+onValue(updateP, (snapshot) => {
+  const studentData = snapshot.val();
+ console.log(studentData.Age)
+ let studentFName = studentData.FirstName
+ let studentSName = studentData.LastName
+ let studentAge = studentData.Age
+ let studentGender = studentData.Gender
+ let studentID = studentData.StudentID 
+ let studentsEmail = studentData.SchoolEmail
+document.getElementById("fname").value = studentFName
+document.getElementById("lname").value = studentSName
+document.getElementById("age").value = studentAge
+document.getElementById("gender").value = studentGender
+document.getElementById("sID").value = studentID
+document.getElementById("sEmail").value = studentsEmail
+
+});
+}
