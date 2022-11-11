@@ -40,7 +40,10 @@ linkPupils.onclick = function(e) {
 function pupils(e) {    
   mainBody.innerHTML = "\
   <div>\
+  <br>\
+  <br>\
     <button id='addPupil'>Add Pupil</button>\
+    <button id='takeAttendance'>Take new attendance</button>\
   </div>\
   <table>\
     <thead>\
@@ -51,6 +54,7 @@ function pupils(e) {
       <th>Age</th>\
       <th>Gender</th>\
       <th>School Email</th>\
+      <th>Present<th>\
       <th>Operations</th>\
     </thead>\
     <tbody id='tbody'></tbody>\
@@ -159,6 +163,7 @@ function AddItemsToTable(fname, lname, sID, age, gender, sEmail){
   var td6 = document.createElement("td")
   var td7 = document.createElement("td")
   var td8 = document.createElement("td")
+  
 
   td1.innerHTML= ++stdNo;
   td2.innerHTML= fname;
@@ -212,7 +217,6 @@ function GetAllDataOnce(){
 // We are using six parameters: first name, last name, student ID, age, gender and student email.
 function writeStudentData(fname, lname, sID, age, gender, sEmail) {
 
-
   // Get a reference to the student list on our firebase realtime database
   const reference = ref(db, '/students/' + sID);
 
@@ -230,7 +234,6 @@ function writeStudentData(fname, lname, sID, age, gender, sEmail) {
 
 
   //************************************Delete Pupil */
-deletePupil('S-2');
 
   // Add an event listenter that will work when the remove pupil button is pressed
 
@@ -252,6 +255,88 @@ deletePupil('S-2');
 
 
       
+
+function takeAttendance(){
+console.log("test")
+// More API functions here:
+          // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+      
+          // the link to your model provided by Teachable Machine export panel
+          const URL = "https://teachablemachine.withgoogle.com/models/ic6PVBI_t/";
+      
+          let model, webcam, labelContainer, maxPredictions;
+      
+          // Load the image model and setup the webcam
+
+              const modelURL = URL + "model.json";
+              const metadataURL = URL + "metadata.json";
+      
+              // load the model and metadata
+              // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+              // or files from your local hard drive
+              // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+              model =  tmImage.load(modelURL, metadataURL);
+              maxPredictions = model.getTotalClasses();
+      
+              // Convenience function to setup a webcam
+              const flip = true; // whether to flip the webcam
+              webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+               webcam.setup(); // request access to the webcam
+               webcam.play();
+              window.requestAnimationFrame(loop);
+      
+              // append elements to the DOM
+              document.getElementById("webcam-container").appendChild(webcam.canvas);
+              labelContainer = document.getElementById("label-container");
+              for (let i = 0; i < maxPredictions; i++) { // and class labels
+                  labelContainer.appendChild(document.createElement("div"));
+              }
+          
+      
+          async function loop() {
+              webcam.update(); // update the webcam frame
+              await predict();
+              window.requestAnimationFrame(loop);
+          }
+      
+          // run the webcam image through the image model
+          async function predict() {
+              // predict can take in an image, video or canvas html element
+              const prediction = await model.predict(webcam.canvas);
+              let studentContainer = document.getElementById("student-container")
+              for (let i = 0; i < maxPredictions; i++) {
+                  const classPrediction =
+                      prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                  labelContainer.childNodes[i].innerHTML = classPrediction;
+                  studentContainer.innerHTML = findStudent(className)     
+              }
+          }
+
+}
+
+var linkAttendance = document.getElementById("take-attendance");
+
+linkAttendance.onclick = function(e) { 
+  return attendance(e); 
+};
+
+
+function attendance(e){   
+  mainBody.innerHTML = '<div>Teachable Machine Image Model</div>\
+  <button type="button" id="attendanceButton">Start</button>\
+  <div id="webcam-container"></div>\
+  <div id="label-container"></div>\
+  <div id="student-container"></div>';
+}    
+var attendanceButton = document.getElementById("attendanceButton");
+
+
+attendanceButton.onclick = function(e){
+  console.log("1")
+  //Prevent Default Form Submission Behavior
+  e.preventDefault();
+  takeAttendance();
+} 
 
 
 

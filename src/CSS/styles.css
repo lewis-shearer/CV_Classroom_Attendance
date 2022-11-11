@@ -69,8 +69,8 @@ h2 {font-size: 35px;
 text-align: center;}
 
 .main-body {background-color: #E5F6DF;
-            height: 655px;
-            width: 870px;
+            
+            width: 100%;
            margin-left: 25px ;
             float: left;
             border-radius: 25px;}
@@ -164,4 +164,10 @@ th, td{
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+
+#container{
+ display: flex;
+ flex-direction: row;
 }
